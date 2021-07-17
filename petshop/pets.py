@@ -50,7 +50,7 @@ def dashboard():
     #order by bought
     oby3 = request.args.get("order_by", "bought") # TODO. This is currently not used. 
     order = request.args.get("order", "asc")
-    if order == "asc" and oby3=="name":
+    if order == "asc" and oby3=="bought":
         cursor.execute(f"select p.id, p.name, p.bought, p.sold, s.name from pet p, animal s where p.species = s.id order by p.bought")
         pets = cursor.fetchall()
     elif oby3=="bought":
@@ -68,12 +68,12 @@ def dashboard():
         pets = cursor.fetchall()
     
     #order by species
-    oby5 = request.args.get("order_by", "name") # TODO. This is currently not used. 
+    oby5 = request.args.get("order_by", "species") # TODO. This is currently not used. 
     order = request.args.get("order", "asc")
     if order == "asc" and oby5=="species":
         cursor.execute(f"select p.id, p.name, p.bought, p.sold, s.name from pet p, animal s where p.species = s.id order by p.species")
         pets = cursor.fetchall()
-    elif oby5=="name":
+    elif oby5=="species":
         cursor.execute(f"select p.id, p.name, p.bought, p.sold, s.name from pet p, animal s where p.species = s.id order by p.species desc")
         pets = cursor.fetchall()
     
