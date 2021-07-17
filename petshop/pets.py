@@ -25,13 +25,51 @@ def search(field, value):
 def dashboard():
     conn = db.get_db()
     cursor = conn.cursor()
-    oby = request.args.get("order_by", "id") # TODO. This is currently not used. 
+    
+    oby1 = request.args.get("order_by", "id") # TODO. This is currently not used. 
     order = request.args.get("order", "asc")
-    if order == "asc":
+    if order == "asc" and oby1=="id":
         cursor.execute(f"select p.id, p.name, p.bought, p.sold, s.name from pet p, animal s where p.species = s.id order by p.id")
-    else:
+    elif oby1 =="id"
         cursor.execute(f"select p.id, p.name, p.bought, p.sold, s.name from pet p, animal s where p.species = s.id order by p.id desc")
     pets = cursor.fetchall()
+    
+    #order by name
+    oby2 = request.args.get("order_by", "name") # TODO. This is currently not used. 
+    order = request.args.get("order", "asc")
+    if order == "asc" and oby2=="name":
+        cursor.execute(f"select p.id, p.name, p.bought, p.sold, s.name from pet p, animal s where p.species = s.id order by p.name")
+    elif oby2=="name":
+        cursor.execute(f"select p.id, p.name, p.bought, p.sold, s.name from pet p, animal s where p.species = s.id order by p.name desc")
+    pets = cursor.fetchall()
+    
+    #order by bought
+    oby3 = request.args.get("order_by", "bought") # TODO. This is currently not used. 
+    order = request.args.get("order", "asc")
+    if order == "asc" and oby3=="name":
+        cursor.execute(f"select p.id, p.name, p.bought, p.sold, s.name from pet p, animal s where p.species = s.id order by p.bought")
+    elif oby3=="bought":
+        cursor.execute(f"select p.id, p.name, p.bought, p.sold, s.name from pet p, animal s where p.species = s.id order by p.bought desc")
+    pets = cursor.fetchall()
+    
+    #order by sold
+    oby4 = request.args.get("order_by", "sold") # TODO. This is currently not used. 
+    order = request.args.get("order", "asc")
+    if order == "asc" and oby4=="sold":
+        cursor.execute(f"select p.id, p.name, p.bought, p.sold, s.name from pet p, animal s where p.species = s.id order by p.sold")
+    elif oby4=="sold":
+        cursor.execute(f"select p.id, p.name, p.bought, p.sold, s.name from pet p, animal s where p.species = s.id order by p.sold desc")
+    pets = cursor.fetchall()
+    
+    #order by species
+    oby5 = request.args.get("order_by", "name") # TODO. This is currently not used. 
+    order = request.args.get("order", "asc")
+    if order == "asc" and oby5=="species":
+        cursor.execute(f"select p.id, p.name, p.bought, p.sold, s.name from pet p, animal s where p.species = s.id order by p.species")
+    elif oby5=="name":
+        cursor.execute(f"select p.id, p.name, p.bought, p.sold, s.name from pet p, animal s where p.species = s.id order by p.species desc")
+    pets = cursor.fetchall()
+    
     return render_template('index.html', pets = pets, order="desc" if order=="asc" else "asc")
 
 
@@ -75,6 +113,25 @@ def edit(pid):
         description = request.form.get('description')
         sold = request.form.get("sold")
         # TODO Handle sold
+        ###########
+        cursor.execute("select p.sold from pet p where p.id = ?",[pid])
+        pet_sold = cursor.fetchone()
+        sold_data, = pet_sold
+        sql_update_query = """update pet set description = ?, sold = ? where id = ?"""
+        if sold_data!='' and not sold:
+        	data = description, '',pid)
+        	cursor.execute(sql_update_query,data)
+        	conn.commit()
+        if sold_data=='' and sold:
+        	today = datetime.data.today().strftime('%Y-%m-%d')
+        	data = (description, today,pid)
+        	cursor.execute(sql_update_query,data)
+        	conn.commit()
+        else:
+        	sql_update_query = """update pet set description = ? where id = ?"""
+        	data = (description,today,pid)
+        	curspr.execute(sql_update_query,data)
+        	conn.commit()
         return redirect(url_for("pets.pet_info", pid=pid), 302)
         
     
