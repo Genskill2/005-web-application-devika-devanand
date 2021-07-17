@@ -30,9 +30,11 @@ def dashboard():
     order = request.args.get("order", "asc")
     if order == "asc" and oby1=="id":
         cursor.execute(f"select p.id, p.name, p.bought, p.sold, s.name from pet p, animal s where p.species = s.id order by p.id")
+        pets = cursor.fetchall()
     elif oby1 =="id":
         cursor.execute(f"select p.id, p.name, p.bought, p.sold, s.name from pet p, animal s where p.species = s.id order by p.id desc")
-    pets = cursor.fetchall()
+        pets = cursor.fetchall()
+    
     
     #order by name
     oby2 = request.args.get("order_by", "name") # TODO. This is currently not used. 
@@ -129,7 +131,7 @@ def edit(pid):
         	cursor.execute(sql_update_query,data)
         	conn.commit()
         if sold_data=='' and sold:
-        	today = datetime.data.today().strftime('%Y-%m-%d')
+        	today = datetime.date.today().strftime('%Y-%m-%d')
         	data = (description, today,pid)
         	cursor.execute(sql_update_query,data)
         	conn.commit()
