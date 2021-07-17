@@ -119,7 +119,7 @@ def edit(pid):
         sold_data, = pet_sold
         sql_update_query = """update pet set description = ?, sold = ? where id = ?"""
         if sold_data!='' and not sold:
-        	data = description, '',pid)
+        	data = (description, '',pid)
         	cursor.execute(sql_update_query,data)
         	conn.commit()
         if sold_data=='' and sold:
