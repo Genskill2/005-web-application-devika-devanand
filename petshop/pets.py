@@ -30,7 +30,7 @@ def dashboard():
     order = request.args.get("order", "asc")
     if order == "asc" and oby1=="id":
         cursor.execute(f"select p.id, p.name, p.bought, p.sold, s.name from pet p, animal s where p.species = s.id order by p.id")
-    elif oby1 =="id"
+    elif oby1 =="id":
         cursor.execute(f"select p.id, p.name, p.bought, p.sold, s.name from pet p, animal s where p.species = s.id order by p.id desc")
     pets = cursor.fetchall()
     
