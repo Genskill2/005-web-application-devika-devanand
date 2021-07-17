@@ -39,36 +39,41 @@ def dashboard():
     order = request.args.get("order", "asc")
     if order == "asc" and oby2=="name":
         cursor.execute(f"select p.id, p.name, p.bought, p.sold, s.name from pet p, animal s where p.species = s.id order by p.name")
+        pets = cursor.fetchall()
     elif oby2=="name":
         cursor.execute(f"select p.id, p.name, p.bought, p.sold, s.name from pet p, animal s where p.species = s.id order by p.name desc")
-    pets = cursor.fetchall()
+        pets = cursor.fetchall()
+    
     
     #order by bought
     oby3 = request.args.get("order_by", "bought") # TODO. This is currently not used. 
     order = request.args.get("order", "asc")
     if order == "asc" and oby3=="name":
         cursor.execute(f"select p.id, p.name, p.bought, p.sold, s.name from pet p, animal s where p.species = s.id order by p.bought")
+        pets = cursor.fetchall()
     elif oby3=="bought":
         cursor.execute(f"select p.id, p.name, p.bought, p.sold, s.name from pet p, animal s where p.species = s.id order by p.bought desc")
-    pets = cursor.fetchall()
+        pets = cursor.fetchall()
     
     #order by sold
     oby4 = request.args.get("order_by", "sold") # TODO. This is currently not used. 
     order = request.args.get("order", "asc")
     if order == "asc" and oby4=="sold":
         cursor.execute(f"select p.id, p.name, p.bought, p.sold, s.name from pet p, animal s where p.species = s.id order by p.sold")
+        pets = cursor.fetchall()
     elif oby4=="sold":
         cursor.execute(f"select p.id, p.name, p.bought, p.sold, s.name from pet p, animal s where p.species = s.id order by p.sold desc")
-    pets = cursor.fetchall()
+        pets = cursor.fetchall()
     
     #order by species
     oby5 = request.args.get("order_by", "name") # TODO. This is currently not used. 
     order = request.args.get("order", "asc")
     if order == "asc" and oby5=="species":
         cursor.execute(f"select p.id, p.name, p.bought, p.sold, s.name from pet p, animal s where p.species = s.id order by p.species")
+        pets = cursor.fetchall()
     elif oby5=="name":
         cursor.execute(f"select p.id, p.name, p.bought, p.sold, s.name from pet p, animal s where p.species = s.id order by p.species desc")
-    pets = cursor.fetchall()
+        pets = cursor.fetchall()
     
     return render_template('index.html', pets = pets, order="desc" if order=="asc" else "asc")
 
@@ -101,6 +106,7 @@ def edit(pid):
         cursor.execute("select t.name from tags_pets tp, tag t where tp.pet = ? and tp.tag = t.id", [pid])
         tags = (x[0] for x in cursor.fetchall())
         name, bought, sold, description, species = pet
+        print(sold)
         data = dict(id = pid,
                     name = name,
                     bought = format_date(bought),
@@ -129,8 +135,8 @@ def edit(pid):
         	conn.commit()
         else:
         	sql_update_query = """update pet set description = ? where id = ?"""
-        	data = (description,today,pid)
-        	curspr.execute(sql_update_query,data)
+        	data = (description,pid)
+        	cursor.execute(sql_update_query,data)
         	conn.commit()
         return redirect(url_for("pets.pet_info", pid=pid), 302)
         
